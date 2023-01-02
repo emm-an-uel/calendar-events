@@ -2,14 +2,12 @@ package com.example.calendarevents
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.example.calendarevents.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var calendarView: MaterialCalendarView
     private lateinit var fabAddEvent: FloatingActionButton
     val events = arrayListOf<Event>()
-    val calendarDays = arrayListOf<CalendarDay>()
+    val mapOfCalendarDays = mutableMapOf<CalendarDay, Event>() // calendarDay-Event pairs
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,20 +61,27 @@ class MainActivity : AppCompatActivity() {
             val month: Int = localDate.monthValue
             val day: Int = localDate.dayOfMonth
             val calendarDay: CalendarDay = CalendarDay.from(year, month, day)
-            calendarDays.add(calendarDay)
+
+            mapOfCalendarDays[calendarDay] = event // pairs calendarDay with the corresponding event
         }
     }
 
     private fun setupCalendar() {
         calendarView.addDecorator(object: DayViewDecorator {
+            lateinit var calendarDay: CalendarDay
+
             override fun shouldDecorate(day: CalendarDay?): Boolean {
-                return calendarDays.contains(day) // check if 'day' is in calendarDays (days which have events)
+                return if (mapOfCalendarDays.containsKey(day)) { // check if 'day' is in mapOfCalendarDays (a map of days which have Events)
+                    calendarDay = day!!
+                    true
+                } else false
             }
 
             override fun decorate(view: DayViewFacade?) {
-                view?.addSpan(
-                    DotSpan(8F, ContextCompat.getColor(this@MainActivity, R.color.teal_200))
-                )
+                val event: Event? = mapOfCalendarDays[calendarDay]
+                if (event != null) {
+                    view?.addSpan(AddTextToDates(event.name))
+                }
             }
         })
     }
