@@ -7,18 +7,37 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity">
 
-    <include
-        android:id="@+id/content_main"
-        layout="@layout/content_main" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonFirst"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddEvent"
+        <include
+            android:id="@+id/content_main"
+            layout="@layout/content_main" />
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/buttonFirst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:contentDescription="Add Event"
-        android:src="@drawable/ic_baseline_add_24"
+        android:layout_margin="10dp"
+        android:text="first calendar"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/buttonSecond" />
+
+    <Button
+        android:id="@+id/buttonSecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="second calendar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/buttonFirst"
         app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
