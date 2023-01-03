@@ -8,6 +8,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -68,21 +69,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupCalendar() {
         calendarView.addDecorator(object: DayViewDecorator {
-            lateinit var calendarDay: CalendarDay
 
             override fun shouldDecorate(day: CalendarDay?): Boolean {
                 return if (mapOfCalendarDays.containsKey(day)) { // check if 'day' is in mapOfCalendarDays (a map of days which have Events)
-                    calendarDay = day!!
+                    calendarView.selectedDates.add(day)
                     true
                 } else false
             }
 
             override fun decorate(view: DayViewFacade?) {
-                val event: Event? = mapOfCalendarDays[calendarDay]
-                if (event != null) {
-                    view?.addSpan(AddTextToDates(event.name))
-                }
+                view?.addSpan(DotSpan(5F, R.color.teal_200))
+                //if (view != null && mapOfCalendarDays[calendarDay] != null) {
+                //    addEvent(view, mapOfCalendarDays[calendarDay]!!)
+                //}
+            }
+
+            private fun addEvent(view: DayViewFacade, eventName: String) {
+                view.addSpan(AddTextToDates(eventName))
             }
         })
+
+        for (calendarDay in calendarView.selectedDates) {
+            // TODO: check and recolor dots if possible?
+        }
     }
 }
