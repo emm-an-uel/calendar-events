@@ -71,10 +71,7 @@ class MainActivity : AppCompatActivity() {
         calendarView.addDecorator(object: DayViewDecorator {
 
             override fun shouldDecorate(day: CalendarDay?): Boolean {
-                return if (mapOfCalendarDays.containsKey(day)) { // check if 'day' is in mapOfCalendarDays (a map of days which have Events)
-                    calendarView.selectedDates.add(day)
-                    true
-                } else false
+                return mapOfCalendarDays.containsKey(day)
             }
 
             override fun decorate(view: DayViewFacade?) {
@@ -88,9 +85,5 @@ class MainActivity : AppCompatActivity() {
                 view.addSpan(AddTextToDates(eventName))
             }
         })
-
-        for (calendarDay in calendarView.selectedDates) {
-            // TODO: check and recolor dots if possible?
-        }
     }
 }
