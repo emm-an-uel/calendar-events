@@ -35,8 +35,14 @@ android {
 }
 
 dependencies {
-    // MaterialCalendarView
+    // hugomfandrade CalendarView-Widget
+    implementation 'com.github.hugomfandrade:CalendarView-Widget:1.0.1'
+
+    // prolificinteractive MaterialCalendarView
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+
+    // threeten LocalDate
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.0'
 
     // navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'

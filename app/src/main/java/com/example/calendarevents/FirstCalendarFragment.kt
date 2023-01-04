@@ -1,6 +1,9 @@
 package com.example.calendarevents
 
+import android.content.Context
 import android.os.Bundle
+import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +15,9 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
-import java.time.LocalDate
+import org.threeten.bp.LocalDate
+import org.threeten.bp.temporal.TemporalAdjusters.firstDayOfMonth
+import org.threeten.bp.temporal.TemporalAdjusters.lastDayOfMonth
 
 class FirstCalendarFragment : Fragment() {
     private var _binding: FragmentFirstCalendarBinding? = null
@@ -77,7 +82,23 @@ class FirstCalendarFragment : Fragment() {
         }
     }
 
+    private fun colorText(date: CalendarDay) {
+        // set calendar text color
+        val localDate: LocalDate = date.date
+        val firstDay = localDate.with(firstDayOfMonth())
+        val lastDay = localDate.with(lastDayOfMonth())
+        val minDate = CalendarDay.from(firstDay)
+        val maxDate = CalendarDay.from(lastDay)
+        calendarView.addDecorator(CurrentMonthTextDecorator(requireContext(), minDate, maxDate))
+        calendarView.addDecorator(OtherMonthTextDecorator(requireContext(), minDate, maxDate))
+    }
+
     private fun setupCalendar() {
+        colorText(calendarView.currentDate) // first time coloring
+        calendarView.setOnMonthChangedListener { _, date -> // color months as user swipes through calendar
+            colorText(date)
+        }
+
         calendarView.addDecorator(object: DayViewDecorator {
 
             override fun shouldDecorate(day: CalendarDay?): Boolean {
@@ -95,5 +116,55 @@ class FirstCalendarFragment : Fragment() {
                 view.addSpan(AddTextToDates(eventName))
             }
         })
+    }
+
+    inner class OtherMonthTextDecorator(
+        private val context: Context,
+        private val minDate: CalendarDay,
+        private val maxDate: CalendarDay
+    ) : DayViewDecorator { // decorate all dates not within current month with gray
+        override fun shouldDecorate(day: CalendarDay?): Boolean {
+            if (day != null) {
+                return !day.isInRange(minDate, maxDate)
+            }
+            return false
+        }
+
+        override fun decorate(view: DayViewFacade?) {
+            view?.addSpan(ForegroundColorSpan(getColor(context, R.attr.defaultTextColor)))
+        }
+
+        private fun getColor(context: Context, colorResId: Int): Int {
+            val typedValue = TypedValue()
+            val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+            val color = typedArray.getColor(0, 0)
+            typedArray.recycle()
+            return color
+        }
+    }
+
+    inner class CurrentMonthTextDecorator(
+        private val context: Context,
+        private val minDate: CalendarDay,
+        private val maxDate: CalendarDay
+    ) : DayViewDecorator { // decorate all dates within current month with primaryTextColor
+        override fun shouldDecorate(day: CalendarDay?): Boolean {
+            if (day != null) {
+                return day.isInRange(minDate, maxDate)
+            }
+            return false
+        }
+
+        override fun decorate(view: DayViewFacade?) {
+            view?.addSpan(ForegroundColorSpan(getColor(context, R.attr.primaryTextColor)))
+        }
+
+        private fun getColor(context: Context, colorResId: Int): Int {
+            val typedValue = TypedValue()
+            val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+            val color = typedArray.getColor(0, 0)
+            typedArray.recycle()
+            return color
+        }
     }
 }
