@@ -106,7 +106,7 @@ class FirstCalendarFragment : Fragment() {
             }
 
             override fun decorate(view: DayViewFacade?) {
-                view?.addSpan(DotSpan(5F, R.color.teal_200))
+                view?.addSpan(DotSpan(5F, getColor(requireContext(), androidx.appcompat.R.attr.colorPrimary)))
                 //if (view != null && mapOfCalendarDays[calendarDay] != null) {
                 //    addEvent(view, mapOfCalendarDays[calendarDay]!!)
                 //}
@@ -116,6 +116,14 @@ class FirstCalendarFragment : Fragment() {
                 view.addSpan(AddTextToDates(eventName))
             }
         })
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 
     inner class OtherMonthTextDecorator(
