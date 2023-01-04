@@ -25,10 +25,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvMonth"
         app:month_header_show="false"
+        app:offset_day_text_color="?attr/primaryTextColor"
         app:week_header_movable="false" />
 
     <include
         layout="@layout/week_header_layout"
         app:layout_constraintTop_toTopOf="@id/calendarView" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
