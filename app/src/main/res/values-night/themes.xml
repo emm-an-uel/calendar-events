@@ -14,5 +14,6 @@
         <!-- Customize your theme here. -->
         <item name="primaryTextColor">@color/white</item>
         <item name="defaultTextColor">@color/dark_theme_text_gray</item>
+        <item name="colorBackground">@color/dark_theme_bg</item>
     </style>
 </resources>

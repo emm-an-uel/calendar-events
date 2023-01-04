@@ -10,4 +10,5 @@
 
     <color name="light_theme_text_gray">#C3C3C3</color>
     <color name="dark_theme_text_gray">#7F7F7F</color>
+    <color name="dark_theme_bg">#121212</color>
 </resources>

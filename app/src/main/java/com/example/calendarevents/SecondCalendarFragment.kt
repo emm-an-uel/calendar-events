@@ -14,6 +14,7 @@ class SecondCalendarFragment : Fragment() {
     private val binding get() = _binding!!
 
     lateinit var calendarView: CalendarView
+    lateinit var daysOfWeek: List<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +28,7 @@ class SecondCalendarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         calendarView = binding.calendarView
+        daysOfWeek = resources.getStringArray(R.array.days_of_week).toList()
         setupCalendar()
     }
 
