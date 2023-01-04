@@ -6,11 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".SecondCalendarFragment">
 
+    <TextView
+        android:id="@+id/tvMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="January 2023"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <org.hugoandrade.calendarviewlib.CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:day_text_color="?attr/primaryTextColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMonth"
         app:month_header_show="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
