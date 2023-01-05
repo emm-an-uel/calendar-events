@@ -54,7 +54,7 @@ class SecondCalendarFragment : Fragment() {
         // listen for new events
         childFragmentManager.setFragmentResultListener("newEvent", this) { _, _ ->
             events = viewModel.getEvents()
-            setupCalendar()
+            addEvents()
         }
     }
 
@@ -74,7 +74,10 @@ class SecondCalendarFragment : Fragment() {
             syncMonth(month, year)
         }
 
-        // add events to calendar
+        addEvents() // add user events to calendar
+    }
+
+    private fun addEvents() {
         val calObjectList = arrayListOf<CalendarView.CalendarObject>()
         for (event in events) {
             calObjectList.add(
@@ -83,7 +86,7 @@ class SecondCalendarFragment : Fragment() {
                     event.date,
                     ContextCompat.getColor(requireContext(), R.color.teal_700),
                     ContextCompat.getColor(requireContext(), R.color.teal_700)
-            ))
+                ))
         }
         calendarView.setCalendarObjectList(calObjectList)
     }
