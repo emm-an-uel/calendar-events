@@ -85,7 +85,7 @@ class SecondCalendarFragment : Fragment() {
             calObjectList.add(
                 CalendarView.CalendarObject(
                     null,
-                    event.date,
+                    event.date, // where 'date': Calendar
                     ContextCompat.getColor(requireContext(), R.color.teal_700),
                     ContextCompat.getColor(requireContext(), R.color.teal_700)
                 ))
