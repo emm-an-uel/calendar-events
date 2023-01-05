@@ -78,7 +78,9 @@ class SecondCalendarFragment : Fragment() {
     }
 
     private fun addEvents() {
-        val calObjectList = arrayListOf<CalendarView.CalendarObject>()
+        val calObjectList = arrayListOf<CalendarView.CalendarObject>() // resets list to prevent duplicate Events
+        // previously, I looped through each event in events as below and added a CalendarObject each
+        // this caused duplicate events when the fragment is resumed since the CalendarObjects added before were not removed
         for (event in events) {
             calObjectList.add(
                 CalendarView.CalendarObject(
