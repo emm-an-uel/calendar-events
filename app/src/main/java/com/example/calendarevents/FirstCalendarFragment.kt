@@ -25,8 +25,8 @@ class FirstCalendarFragment : Fragment() {
 
     private lateinit var calendarView: MaterialCalendarView
     private lateinit var fabAddEvent: FloatingActionButton
-    val events = arrayListOf<Event>()
-    val mapOfCalendarDays = mutableMapOf<CalendarDay, Event>() // calendarDay-Event pairs
+    val events = arrayListOf<Event1>()
+    val mapOfCalendarDays = mutableMapOf<CalendarDay, Event1>() // calendarDay-Event pairs
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,23 +53,23 @@ class FirstCalendarFragment : Fragment() {
             when (n) {
                 0 -> {
                     val date = LocalDate.now()
-                    events.add(Event(eventName, date))
+                    events.add(Event1(eventName, date))
                 }
                 1 -> {
                     val date = LocalDate.now()
                     val newDate = date.plusDays(1)
-                    events.add(Event(eventName, newDate))
+                    events.add(Event1(eventName, newDate))
                 }
                 else -> {
                     val date = LocalDate.now()
                     val newDate = date.plusMonths(1)
-                    events.add(Event(eventName, newDate))
+                    events.add(Event1(eventName, newDate))
                 }
             }
         }
     }
 
-    private fun convertToCalendarDays(events: List<Event>) {
+    private fun convertToCalendarDays(events: List<Event1>) {
         // add each event to a list of calendarDays which will be checked against when decorating CalendarView
         for (event in events) {
             val localDate: LocalDate = event.date
