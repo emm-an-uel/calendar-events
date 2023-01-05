@@ -75,16 +75,17 @@ class SecondCalendarFragment : Fragment() {
         }
 
         // add events to calendar
+        val calObjectList = arrayListOf<CalendarView.CalendarObject>()
         for (event in events) {
-            calendarView.addCalendarObject(
+            calObjectList.add(
                 CalendarView.CalendarObject(
                     null,
                     event.date,
                     ContextCompat.getColor(requireContext(), R.color.teal_700),
                     ContextCompat.getColor(requireContext(), R.color.teal_700)
-                )
-            )
+            ))
         }
+        calendarView.setCalendarObjectList(calObjectList)
     }
 
     private fun syncMonth(currentMonth: Int, currentYear: Int) {
