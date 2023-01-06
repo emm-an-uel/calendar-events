@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/calendar_card_item.xml" value="0.20512820512820512" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/event_card_item.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/fragment_calendar_dialog.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/fragment_first_calendar.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/fragment_second_calendar.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Dummy Apps/CalendarEvents/app/src/main/res/layout/new_event_dialog.xml" value="0.25" />

@@ -11,6 +11,7 @@ import com.example.calendarevents.databinding.FragmentSecondCalendarBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
+import java.util.*
 
 class SecondCalendarFragment : Fragment() {
     private var _binding: FragmentSecondCalendarBinding? = null
@@ -22,6 +23,8 @@ class SecondCalendarFragment : Fragment() {
     private var events = listOf<Event2>()
 
     lateinit var viewModel: ViewModel
+
+    private lateinit var calendarDialog: CalendarDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +78,21 @@ class SecondCalendarFragment : Fragment() {
         }
 
         addEvents() // add user events to calendar
+        calendarView.setOnItemClickedListener { calendarObjects, previousDate, selectedDate ->
+            if (calendarObjects.size > 0) { // if there are events
+                showCalendarDialog(selectedDate)
+
+            } else { // if no events that day
+                createNewEvent()
+            }
+        }
+    }
+
+    private fun showCalendarDialog(selectedDate: Calendar) {
+        calendarDialog = CalendarDialog()
+        calendarDialog.setSelectedDate(selectedDate)
+        binding.frameLayout.visibility = View.VISIBLE
+        childFragmentManager.beginTransaction().replace(binding.frameLayout.id, calendarDialog).commit()
     }
 
     private fun addEvents() {
