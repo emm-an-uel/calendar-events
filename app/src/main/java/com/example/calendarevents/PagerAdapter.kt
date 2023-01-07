@@ -21,10 +21,12 @@ class PagerAdapter(
 ) : PagerAdapter() {
 
     private val initialPosition = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt()
+    // number of days between minDate and selectedDate to determine ViewPager's initial position
+
     private val initialPageAndDate = Pair<Int, Calendar>(initialPosition, selectedDate)
 
     override fun getCount(): Int {
-        return ChronoUnit.DAYS.between(minDate.toInstant(), maxDate.toInstant()).toInt()
+        return ChronoUnit.DAYS.between(minDate.toInstant(), maxDate.toInstant()).toInt() // total number of days between minDate and maxDate
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
@@ -34,10 +36,10 @@ class PagerAdapter(
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
 
         val currentDate: Calendar = initialPageAndDate.second.clone() as Calendar
-        currentDate.add(Calendar.DATE, position - initialPageAndDate.first)
+        currentDate.add(Calendar.DATE, position - initialPageAndDate.first) // adds the number of days it is away from the initialDate
 
         val view = LayoutInflater.from(context).inflate(R.layout.calendar_card_item, container, false)
-        view.tag = position
+        view.tag = position // tag for adjustments of size and opacity in CalendarDialog.updatePager
 
         val tvDayOfMonth: TextView = view.findViewById(R.id.tvDayOfMonth)
         val tvDayOfWeek: TextView = view.findViewById(R.id.tvDayOfWeek)
@@ -81,6 +83,6 @@ class PagerAdapter(
     }
 
     override fun getItemPosition(`object`: Any): Int {
-        return POSITION_NONE
+        return POSITION_NONE // not sure what this does but it was included in the original CalendarView-Widget app by hugomfandrade
     }
 }

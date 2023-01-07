@@ -89,6 +89,7 @@ class SecondCalendarFragment : Fragment() {
     }
 
     private fun showCalendarDialog(selectedDate: Calendar) {
+        // calendarDialog contains a ViewPager which users can swipe through to see the events for each day
         calendarDialog = CalendarDialog()
         calendarDialog.setSelectedDate(selectedDate)
         binding.frameLayout.visibility = View.VISIBLE
@@ -96,6 +97,8 @@ class SecondCalendarFragment : Fragment() {
     }
 
     private fun addEvents() {
+        // add CalendarObjects to CalendarView (colored rectangles which signify an event for that day)
+
         val calObjectList = arrayListOf<CalendarView.CalendarObject>() // resets list to prevent duplicate Events
         // previously, I looped through each event in events as below and added a CalendarObject each
         // this caused duplicate events when the fragment is resumed since the CalendarObjects added before were not removed
@@ -112,6 +115,8 @@ class SecondCalendarFragment : Fragment() {
     }
 
     private fun syncMonth(currentMonth: Int, currentYear: Int) {
+        // a custom Month header was used in this calendar
+        // this syncs the text of the custom header with the month shown in the Calendar
         val month = DateFormatSymbols().months[currentMonth]
         binding.tvMonth.text = "$month $currentYear"
     }

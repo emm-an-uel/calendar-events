@@ -56,7 +56,7 @@ class CalendarDialog : Fragment() {
         setMinMaxDates()
         createMapOfEvents()
         pagerAdapter = PagerAdapter(requireContext(), mapOfEvents, minDate, maxDate, selectedDate)
-        val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt()
+        val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
         binding.viewPager.apply {
             offscreenPageLimit = 3
             adapter = pagerAdapter
@@ -73,7 +73,8 @@ class CalendarDialog : Fragment() {
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-                // update view scale and alpha
+                // update view scale and alpha of views not currently focused
+
                 updatePager(binding.viewPager.findViewWithTag(position), 1f - positionOffset) // current page
                 if ((position + 1) < totalPages) { // next page
                     updatePager(binding.viewPager.findViewWithTag(position + 1), positionOffset)
@@ -85,7 +86,7 @@ class CalendarDialog : Fragment() {
                 if ((position - 1) >= 0) { // previous page
                     updatePager(binding.viewPager.findViewWithTag(position - 1), 0f)
                 }
-                if ((position - 2) >= 0) { // two pages before 
+                if ((position - 2) >= 0) { // two pages before
                     updatePager(binding.viewPager.findViewWithTag(position - 2), 0f)
                 }
             }
@@ -97,11 +98,11 @@ class CalendarDialog : Fragment() {
             override fun onPageScrollStateChanged(state: Int) {
                 // do nothing 
             }
-
         })
     }
 
     private fun updatePager(view: View, offset: Float) {
+        // this method adjusts the size and opacity of ViewPager views which aren't currently focused
         var adjustedOffset: Float =
             (1.0f - 0.0f) * (offset - MIN_OFFSET) / (MAX_OFFSET - MIN_OFFSET) + 0.0f
         adjustedOffset = if (adjustedOffset > 1f) 1f else adjustedOffset
@@ -117,6 +118,7 @@ class CalendarDialog : Fragment() {
     }
 
     private fun createMapOfEvents() {
+        // map to be passed into RecyclerViewAdapter so it knows which days have events
         events = viewModel.getEvents()
         mapOfEvents = mutableMapOf()
         val list = arrayListOf<Event2>()
@@ -137,6 +139,9 @@ class CalendarDialog : Fragment() {
     }
 
     private fun setMinMaxDates() {
+        // minDate and maxDate will be passed to PagerAdapter
+        // so it knows how many pages there are and what page it should be showing
+
         minDate = Calendar.getInstance()
         minDate.set(1992, 0, 1) // note: Calendar has months from 0 - 11
         maxDate = Calendar.getInstance()
