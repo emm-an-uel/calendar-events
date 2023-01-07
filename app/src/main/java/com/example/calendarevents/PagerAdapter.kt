@@ -46,7 +46,7 @@ class PagerAdapter(
         val fabAddEvent: FloatingActionButton = view.findViewById(R.id.fabAddEvent)
 
         tvDayOfMonth.text = currentDate.get(Calendar.DAY_OF_MONTH).toString()
-        tvDayOfWeek.text = currentDate.get(Calendar.DAY_OF_WEEK).toString()
+        tvDayOfWeek.text = getDayOfWeek(currentDate.get(Calendar.DAY_OF_WEEK))
         fabAddEvent.setOnClickListener {
             Toast.makeText(context, "Add new event", Toast.LENGTH_SHORT).show()
         }
@@ -62,6 +62,18 @@ class PagerAdapter(
         container.addView(view)
 
         return view
+    }
+
+    private fun getDayOfWeek(dayInt: Int): String {
+        return when (dayInt) {
+            2 -> "Monday"
+            3 -> "Tuesday"
+            4 -> "Wednesday"
+            5 -> "Thursday"
+            6 -> "Friday"
+            7 -> "Saturday"
+            else -> "Sunday"
+        }
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
