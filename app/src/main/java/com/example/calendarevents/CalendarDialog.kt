@@ -48,6 +48,7 @@ class CalendarDialog : Fragment() {
         setMinMaxDates()
         createMapOfEvents()
         pagerAdapter = PagerAdapter(requireContext(), mapOfEvents, minDate, maxDate, selectedDate)
+        binding.viewPager.offscreenPageLimit = 3
         binding.viewPager.adapter = pagerAdapter
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt()
         // TODO: check if index returns the correct item or if its one off

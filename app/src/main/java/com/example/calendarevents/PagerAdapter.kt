@@ -19,6 +19,10 @@ class PagerAdapter(
     private val maxDate: Calendar,
     private val selectedDate: Calendar
 ) : PagerAdapter() {
+
+    private val initialPosition = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt()
+    private val initialPageAndDate = Pair<Int, Calendar>(initialPosition, selectedDate)
+
     override fun getCount(): Int {
         return ChronoUnit.DAYS.between(minDate.toInstant(), maxDate.toInstant()).toInt()
     }
@@ -28,10 +32,12 @@ class PagerAdapter(
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
+
+        val currentDate: Calendar = initialPageAndDate.second.clone() as Calendar
+        currentDate.add(Calendar.DATE, position - initialPageAndDate.first)
+
         val view = LayoutInflater.from(context).inflate(R.layout.calendar_card_item, container, false)
-        // TODO: check if this adds the correct number of days, or if its one off
-        val currentDate: Calendar = minDate
-        currentDate.add(Calendar.DATE, position)
+        view.tag = position
 
         val tvDayOfMonth: TextView = view.findViewById(R.id.tvDayOfMonth)
         val tvDayOfWeek: TextView = view.findViewById(R.id.tvDayOfWeek)
@@ -39,8 +45,8 @@ class PagerAdapter(
         val rvEvents: RecyclerView = view.findViewById(R.id.rvEvents)
         val fabAddEvent: FloatingActionButton = view.findViewById(R.id.fabAddEvent)
 
-        tvDayOfMonth.text = selectedDate.get(Calendar.DAY_OF_MONTH).toString()
-        tvDayOfWeek.text = selectedDate.get(Calendar.DAY_OF_WEEK).toString()
+        tvDayOfMonth.text = currentDate.get(Calendar.DAY_OF_MONTH).toString()
+        tvDayOfWeek.text = currentDate.get(Calendar.DAY_OF_WEEK).toString()
         fabAddEvent.setOnClickListener {
             Toast.makeText(context, "Add new event", Toast.LENGTH_SHORT).show()
         }
@@ -53,6 +59,16 @@ class PagerAdapter(
             tvNoEvents.visibility = View.VISIBLE
         }
 
+        container.addView(view)
+
         return view
+    }
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View)
+    }
+
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
     }
 }
