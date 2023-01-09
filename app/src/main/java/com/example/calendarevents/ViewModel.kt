@@ -36,6 +36,14 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
                     key = event.date // set new key
                     list.clear() // reset list
                     list.add(event) // add new event to new list
+
+
+                    // DEBUGGING - checking the first item in map
+                    val k1: Calendar = events[0].date
+                    val l1: List<Event2> = mapOfEvents[k1]!!
+                    Log.e(k1.get(Calendar.DAY_OF_MONTH).toString(), l1.size.toString())
+                    Log.e("", "")
+
                 }
 
             } else { // first item in list
@@ -50,8 +58,10 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
         // DEBUGGING
         // TODO: fix - event on the latest date overwrites every other event
         for ((key1, list1) in mapOfEvents) {
+            Log.e("Key", key1.get(Calendar.DAY_OF_MONTH).toString())
+            Log.e("List Size", list1.size.toString())
             for (event1 in list1) {
-                Log.e(key1.get(Calendar.DAY_OF_MONTH).toString(), event1.name)
+                Log.e("Event Name", event1.name)
             }
         }
     }
