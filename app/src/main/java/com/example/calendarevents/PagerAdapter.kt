@@ -14,7 +14,7 @@ import java.util.*
 
 class PagerAdapter(
     private val context: Context,
-    private val events: ArrayList<Event2>,
+    private val mapOfEvents: Map<Calendar, List<Event2>>,
     private val minDate: Calendar,
     private val maxDate: Calendar,
     private val selectedDate: Calendar
@@ -53,17 +53,19 @@ class PagerAdapter(
             Toast.makeText(context, "Add new event", Toast.LENGTH_SHORT).show()
         }
 
-        // find and show today's events
-        val todayEvents = arrayListOf<Event2>()
-        for (event in events) {
-            if (isSameDate(event.date, currentDate)) {
-                todayEvents.add(event)
+        // show today's events
+        var hasEvents = false
+        for (key in mapOfEvents.keys) { // check if mapOfEvents contains a key with same date as currentDate
+            if (isSameDate(key, currentDate)) {
+                val todayEvents: List<Event2> = mapOfEvents[key]!!
+                val adapter = RecyclerViewAdapter(todayEvents)
+                rvEvents.adapter = adapter
+                hasEvents = true
+                break
             }
         }
-        if (todayEvents.isNotEmpty()) {
-            val adapter = RecyclerViewAdapter(todayEvents)
-            rvEvents.adapter = adapter
-        } else {
+
+        if (!hasEvents) { // no events for the day
             rvEvents.visibility = View.GONE
             tvNoEvents.visibility = View.VISIBLE
         }

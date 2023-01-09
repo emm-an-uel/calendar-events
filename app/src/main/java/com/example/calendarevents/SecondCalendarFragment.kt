@@ -3,7 +3,6 @@ package com.example.calendarevents
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +27,7 @@ class SecondCalendarFragment : Fragment() {
     lateinit var daysOfWeek: List<String>
     lateinit var fab: FloatingActionButton
     private var events = arrayListOf<Event2>()
+    lateinit var mapOfEvents: Map<Calendar, List<Event2>>
 
     lateinit var viewModel: ViewModel
 
@@ -49,6 +49,8 @@ class SecondCalendarFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[ViewModel::class.java]
+        viewModel.createMapOfEvents()
+        mapOfEvents = viewModel.getMapOfEvents()
     }
 
     override fun onCreateView(
@@ -78,6 +80,8 @@ class SecondCalendarFragment : Fragment() {
         // listen for new events
         childFragmentManager.setFragmentResultListener("newEvent", this) { _, _ ->
             events = viewModel.getEvents()
+            viewModel.createMapOfEvents()
+            mapOfEvents = viewModel.getMapOfEvents()
             addCalendarObjects()
         }
     }
@@ -124,7 +128,7 @@ class SecondCalendarFragment : Fragment() {
         mView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = PagerAdapter(requireContext(), events, minDate, maxDate, selectedDate)
+        viewPagerAdapter = PagerAdapter(requireContext(), mapOfEvents, minDate, maxDate, selectedDate)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 
