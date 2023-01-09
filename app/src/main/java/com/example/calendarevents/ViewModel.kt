@@ -13,5 +13,6 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
 
     fun saveEvent(event: Event2) {
         events.add(event)
+        events.sortBy { it.date }
     }
 }

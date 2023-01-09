@@ -3,6 +3,7 @@ package com.example.calendarevents
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,7 +80,8 @@ class SecondCalendarFragment : Fragment() {
         // listen for new events
         childFragmentManager.setFragmentResultListener("newEvent", this) { _, _ ->
             events = viewModel.getEvents()
-            addEvents()
+            addCalendarObjects()
+            createMapOfEvents()
         }
     }
 
@@ -88,18 +90,32 @@ class SecondCalendarFragment : Fragment() {
         events = viewModel.getEvents()
         mapOfEvents = mutableMapOf()
         val list = arrayListOf<Event2>()
-        var key: Calendar = Calendar.getInstance()
+        var key: Calendar? = null
         for (event in events) {
-            if (!mapOfEvents.containsKey(event.date)) { // if map does not contain a key of that date
-                if (list.isNotEmpty()) {
-                    mapOfEvents[key] = list // save Calendar-List pair
+            if (!mapOfEvents.containsKey(event.date)) { // if map doesnt contain a key of that date yet
+                if (key != null) { // if this isn't the first item in events
+                    // ie there's no more events in the list which share this date
+                    mapOfEvents[key] = list // add <Calendar, List> pair
+                    list.clear() // reset list for next set of events
+                } else {
+                    key = event.date
+                    list.add(event)
                 }
-                list.clear() // resets list
-                key = event.date // sets new key
-                list.add(event) // adds current event to list which corresponds to above key
 
-            } else { // if map does contain a key of that date, meaning there's >1 event that day
+            } else { // map contains a key of that date
                 list.add(event)
+            }
+        }
+        if (list.isNotEmpty()) {
+            mapOfEvents[key!!] = list // saves last-added list of events
+        }
+
+        // DEBUG: show contents of map
+        if (mapOfEvents.isNotEmpty()) {
+            for ((date, events) in mapOfEvents) {
+                for (event in events) {
+                    Log.e(date.get(Calendar.DAY_OF_MONTH).toString(), event.name)
+                }
             }
         }
     }
@@ -130,7 +146,7 @@ class SecondCalendarFragment : Fragment() {
             syncMonth(month, year)
         }
 
-        addEvents() // add user events to calendar
+        addCalendarObjects() // add user events to calendar
         calendarView.setOnItemClickedListener { calendarObjects, previousDate, selectedDate ->
             if (calendarObjects.size > 0) { // if there are events
                 showCalendarDialog(selectedDate)
@@ -144,7 +160,6 @@ class SecondCalendarFragment : Fragment() {
     private fun showCalendarDialog(selectedDate: Calendar) {
         // inflate the view for the calendar dialog
         mView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
-        // TODO: dismiss dialog when clicked outside 
 
         // set up the ViewPager adapter
         viewPagerAdapter = PagerAdapter(requireContext(), mapOfEvents, minDate, maxDate, selectedDate)
@@ -173,7 +188,7 @@ class SecondCalendarFragment : Fragment() {
     }
 
     private fun pagerSwipeAnimations() {
-        viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
@@ -181,7 +196,10 @@ class SecondCalendarFragment : Fragment() {
             ) {
                 // update view scale and alpha of views not currently focused
 
-                updatePager(viewPager.findViewWithTag(position), 1f - positionOffset) // current page
+                updatePager(
+                    viewPager.findViewWithTag(position),
+                    1f - positionOffset
+                ) // current page
                 if ((position + 1) < totalPages) { // next page
                     updatePager(viewPager.findViewWithTag(position + 1), positionOffset)
                 }
@@ -223,8 +241,9 @@ class SecondCalendarFragment : Fragment() {
         view.scaleY = scale
     }
 
-    private fun addEvents() { // add CalendarObjects to CalendarView (colored rectangles which signify an event for that day)
-        val calObjectList = arrayListOf<CalendarView.CalendarObject>() // resets list to prevent duplicate Events
+    private fun addCalendarObjects() { // add CalendarObjects to CalendarView (colored rectangles which signify an event for that day)
+        val calObjectList =
+            arrayListOf<CalendarView.CalendarObject>() // resets list to prevent duplicate Events
         // previously, I looped through each event in events as below and added a CalendarObject each
         // this caused duplicate events when the fragment is resumed since the CalendarObjects added before were not removed
         for (event in events) {
@@ -234,7 +253,8 @@ class SecondCalendarFragment : Fragment() {
                     event.date, // where 'date': Calendar
                     ContextCompat.getColor(requireContext(), R.color.teal_700),
                     ContextCompat.getColor(requireContext(), R.color.teal_700)
-                ))
+                )
+            )
         }
         calendarView.setCalendarObjectList(calObjectList)
     }
