@@ -37,7 +37,6 @@ class SecondCalendarFragment : Fragment() {
     private lateinit var viewPagerAdapter: PagerAdapter
     private lateinit var minDate: Calendar
     private lateinit var maxDate: Calendar
-    private lateinit var mapOfEvents: MutableMap<Calendar, ArrayList<Event2>>
 
     // for PagerAdapter swipe animations
     private val MIN_OFFSET = 0f
@@ -64,7 +63,6 @@ class SecondCalendarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setMinMaxDates()
-        createMapOfEvents()
 
         events = viewModel.getEvents()
 
@@ -81,42 +79,6 @@ class SecondCalendarFragment : Fragment() {
         childFragmentManager.setFragmentResultListener("newEvent", this) { _, _ ->
             events = viewModel.getEvents()
             addCalendarObjects()
-            createMapOfEvents()
-        }
-    }
-
-    private fun createMapOfEvents() {
-        // map to be passed into RecyclerViewAdapter so it knows which days have events
-        events = viewModel.getEvents()
-        mapOfEvents = mutableMapOf()
-        val list = arrayListOf<Event2>()
-        var key: Calendar? = null
-        for (event in events) {
-            if (!mapOfEvents.containsKey(event.date)) { // if map doesnt contain a key of that date yet
-                if (key != null) { // if this isn't the first item in events
-                    // ie there's no more events in the list which share this date
-                    mapOfEvents[key] = list // add <Calendar, List> pair
-                    list.clear() // reset list for next set of events
-                } else {
-                    key = event.date
-                    list.add(event)
-                }
-
-            } else { // map contains a key of that date
-                list.add(event)
-            }
-        }
-        if (list.isNotEmpty()) {
-            mapOfEvents[key!!] = list // saves last-added list of events
-        }
-
-        // DEBUG: show contents of map
-        if (mapOfEvents.isNotEmpty()) {
-            for ((date, events) in mapOfEvents) {
-                for (event in events) {
-                    Log.e(date.get(Calendar.DAY_OF_MONTH).toString(), event.name)
-                }
-            }
         }
     }
 
@@ -162,7 +124,7 @@ class SecondCalendarFragment : Fragment() {
         mView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = PagerAdapter(requireContext(), mapOfEvents, minDate, maxDate, selectedDate)
+        viewPagerAdapter = PagerAdapter(requireContext(), events, minDate, maxDate, selectedDate)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 

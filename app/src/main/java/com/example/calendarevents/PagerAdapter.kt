@@ -14,7 +14,7 @@ import java.util.*
 
 class PagerAdapter(
     private val context: Context,
-    private val mapOfEvents: MutableMap<Calendar, ArrayList<Event2>>,
+    private val events: ArrayList<Event2>,
     private val minDate: Calendar,
     private val maxDate: Calendar,
     private val selectedDate: Calendar
@@ -53,8 +53,15 @@ class PagerAdapter(
             Toast.makeText(context, "Add new event", Toast.LENGTH_SHORT).show()
         }
 
-        if (mapOfEvents.containsKey(currentDate)) { // if there are events that day
-            val adapter = RecyclerViewAdapter(mapOfEvents[currentDate]!!)
+        // find and show today's events
+        val todayEvents = arrayListOf<Event2>()
+        for (event in events) {
+            if (isSameDate(event.date, currentDate)) {
+                todayEvents.add(event)
+            }
+        }
+        if (todayEvents.isNotEmpty()) {
+            val adapter = RecyclerViewAdapter(todayEvents)
             rvEvents.adapter = adapter
         } else {
             rvEvents.visibility = View.GONE
@@ -62,8 +69,17 @@ class PagerAdapter(
         }
 
         container.addView(view)
-
         return view
+    }
+
+    private fun isSameDate(date1: Calendar, date2: Calendar): Boolean {
+        if (date1.get(Calendar.DAY_OF_MONTH) != date2.get(Calendar.DAY_OF_MONTH)) {
+            return false
+        }
+        if (date1.get(Calendar.MONTH) != date2.get(Calendar.MONTH)) {
+            return false
+        }
+        return date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR)
     }
 
     private fun getDayOfWeek(dayInt: Int): String {
